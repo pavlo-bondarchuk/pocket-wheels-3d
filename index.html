@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#10131a">
+  <title>Pocket Wheels 3D</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div id="app">
+    <canvas id="game"></canvas>
+
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">PW</div>
+        <div>
+          <strong>Pocket Wheels 3D</strong>
+          <span>Browser prototype</span>
+        </div>
+      </div>
+      <div class="stats">
+        <div><span>КОЛО</span><strong id="lap">1 / 2</strong></div>
+        <div><span>ПОЗИЦІЯ</span><strong id="place">1 / 6</strong></div>
+        <div><span>ЧАС</span><strong id="time">00:00.000</strong></div>
+        <div><span>ШВИДКІСТЬ</span><strong id="speed">0 км/год</strong></div>
+      </div>
+      <div class="actions">
+        <button id="qualityBtn" class="ghost">Якість: AUTO</button>
+        <button id="garageBtn">Гараж · 40</button>
+      </div>
+    </div>
+
+    <div id="countdown" class="countdown hidden">3</div>
+    <div id="toast" class="toast hidden"></div>
+
+    <div class="hud-bottom">
+      <div class="help desktop-help">
+        <span><b>W / ↑</b> газ</span>
+        <span><b>S / ↓</b> гальмо</span>
+        <span><b>A D / ← →</b> смуга</span>
+        <span><b>R</b> рестарт</span>
+        <span><b>C</b> камера</span>
+      </div>
+      <div class="car-info">
+        <span id="carClass">HYPER</span>
+        <strong id="carName">NEON COMET</strong>
+      </div>
+    </div>
+
+    <div class="touch-controls">
+      <div class="touch-group steering">
+        <button data-touch="left">◀</button>
+        <button data-touch="right">▶</button>
+      </div>
+      <div class="touch-group pedals">
+        <button data-touch="brake">BRAKE</button>
+        <button data-touch="gas" class="gas">GO</button>
+      </div>
+    </div>
+
+    <div id="garage" class="modal hidden" aria-hidden="true">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <div>
+            <span class="eyebrow">DIE-CAST GARAGE</span>
+            <h1>40 машинок</h1>
+            <p>Усі моделі процедурні, тому гра стартує швидко без важких 3D-файлів.</p>
+          </div>
+          <button id="closeGarage" class="close">×</button>
+        </div>
+        <div class="garage-toolbar">
+          <div id="selectedPreview" class="selected-preview"></div>
+          <div class="selected-meta">
+            <span id="selectedClass">HYPER</span>
+            <h2 id="selectedName">NEON COMET</h2>
+            <div class="bars">
+              <label>Швидкість <i><b id="speedBar"></b></i></label>
+              <label>Розгін <i><b id="accelBar"></b></i></label>
+              <label>Керованість <i><b id="handlingBar"></b></i></label>
+            </div>
+          </div>
+          <button id="useCar" class="use-car">Обрати машину</button>
+        </div>
+        <div id="carGrid" class="car-grid"></div>
+      </div>
+    </div>
+
+    <div id="finish" class="modal hidden" aria-hidden="true">
+      <div class="finish-card">
+        <span class="eyebrow">ФІНІШ</span>
+        <h1 id="finishTitle">Перемога!</h1>
+        <div class="finish-time" id="finishTime">00:00.000</div>
+        <button id="restartBtn">Ще заїзд</button>
+        <button id="finishGarage" class="ghost">Змінити машину</button>
+      </div>
+    </div>
+  </div>
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js';
+
+    const parts = await Promise.all([
+      './game-1.js',
+      './game-2.js',
+      './game-3.js',
+      './game-4.js'
+    ].map(async src => {
+      const response = await fetch(src);
+      if (!response.ok) throw new Error(`Failed to load ${src}`);
+      return response.text();
+    }));
+
+    new Function('THREE', parts.join('\n'))(THREE);
+  </script>
+</body>
+</html>
